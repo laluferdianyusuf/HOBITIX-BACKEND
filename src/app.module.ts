@@ -13,9 +13,24 @@ import { OrdersModule } from './orders/orders.module.js';
 import { PaymentsModule } from './payments/payments.module.js';
 import { CheckInModule } from './check-in/check-in.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
+import { PrismaModule } from './prisma/prisma.module.js';
 
 @Module({
-  imports: [AuthModule, UsersModule, OrganizersModule, EventsModule, CategoriesModule, VenuesModule, TicketsModule, ReservationsModule, OrdersModule, PaymentsModule, CheckInModule, NotificationsModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    UsersModule,
+    OrganizersModule,
+    EventsModule,
+    CategoriesModule,
+    VenuesModule,
+    TicketsModule,
+    ReservationsModule,
+    OrdersModule,
+    PaymentsModule,
+    CheckInModule,
+    NotificationsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Ip,
@@ -35,7 +36,7 @@ export class AuthController {
 
   @Post('verify-email')
   @HttpCode(HttpStatus.OK)
-  async verifyEmail(@Body() userId: string, pin: string) {
+  async verifyEmail(@Body('userId') userId: string, @Body('pin') pin: string) {
     return this.authService.verifyPinEmail(userId, pin);
   }
 
@@ -101,17 +102,24 @@ export class AuthController {
   @Patch('change-password')
   @HttpCode(HttpStatus.OK)
   async changePassword(
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
     @Body() dto: ChangePasswordDto,
   ) {
     return this.authService.changePassword(userId, dto);
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  async getMe(@CurrentUser('userId') userId: string) {
+    return this.authService.getMe(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch('me')
   @HttpCode(HttpStatus.OK)
   async updateUser(
-    @CurrentUser('sub') userId: string,
+    @CurrentUser('userId') userId: string,
     @Body() dto: UpdateUserDto,
   ) {
     return this.authService.updateUser(userId, dto);
@@ -120,7 +128,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Delete('me')
   @HttpCode(HttpStatus.OK)
-  async deleteUser(@CurrentUser('sub') userId: string) {
+  async deleteUser(@CurrentUser('userId') userId: string) {
     return this.authService.deleteUser(userId);
   }
 }

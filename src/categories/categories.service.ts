@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { CategoriesDto } from './dto/categories.dto.js';
+import { UpdateCategoriesDto } from './dto/updateCategories.dt.js';
+import { UpdateCategoryStatusDto } from './dto/updateCategoryStatus.dt.js';
 
 @Injectable()
 export class CategoriesService {
@@ -7,6 +10,7 @@ export class CategoriesService {
 
   findAll() {
     return this.prisma.category.findMany({
+      // data,
       where: {
         isActive: true,
       },
@@ -16,16 +20,29 @@ export class CategoriesService {
     });
   }
 
-  create(data: any) {
+  create(data: CategoriesDto) {
+
     return this.prisma.category.create({
-      data,
+      data: {
+        name:data.name,
+        description:data.description,
+        slug:data.slug,
+      },
     });
   }
 
-  update(id: string, data: any) {
+  update(id: string, data: UpdateCategoriesDto) {
     return this.prisma.category.update({
       where: { id },
       data,
+    });
+  }
+  updateStatus(id: string, data: UpdateCategoryStatusDto) {
+    return this.prisma.category.update({
+      where: { id },
+      data:{
+        isActive:data.isActive
+      },
     });
   }
 

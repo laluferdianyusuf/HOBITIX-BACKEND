@@ -1,0 +1,85 @@
+@baseUrl = http://localhost:2987/api
+
+@ownerToken = YOUR_OWNER_JWT_TOKEN
+@memberToken = YOUR_MEMBER_JWT_TOKEN
+
+@organizerId = YOUR_ORGANIZER_UUID
+@memberId = YOUR_MEMBER_UUID
+
+
+### Invite Manager
+POST {{baseUrl}}/organizers/{{organizerId}}/members/invite
+Authorization: Bearer {{ownerToken}}
+Content-Type: application/json
+
+{
+  "email": "manager@example.com",
+  "role": "MANAGER"
+}
+
+
+### Invite Staff
+POST {{baseUrl}}/organizers/{{organizerId}}/members/invite
+Authorization: Bearer {{ownerToken}}
+Content-Type: application/json
+
+{
+  "email": "staff@example.com",
+  "role": "STAFF"
+}
+
+
+### Invite Checkin Staff
+POST {{baseUrl}}/organizers/{{organizerId}}/members/invite
+Authorization: Bearer {{ownerToken}}
+Content-Type: application/json
+
+{
+  "email": "checkin@example.com",
+  "role": "CHECKIN_STAFF"
+}
+
+
+### Get Active Members
+GET {{baseUrl}}/organizers/{{organizerId}}/members
+Authorization: Bearer {{ownerToken}}
+
+
+### Get All Members
+GET {{baseUrl}}/organizers/{{organizerId}}/members/all
+Authorization: Bearer {{ownerToken}}
+
+
+### Get My Invitations
+GET {{baseUrl}}/organizers/me/invitations
+Authorization: Bearer {{memberToken}}
+
+
+### Accept Invitation
+POST {{baseUrl}}/organizers/members/{{memberId}}/accept
+Authorization: Bearer {{memberToken}}
+
+
+### Reject Invitation
+POST {{baseUrl}}/organizers/members/{{memberId}}/reject
+Authorization: Bearer {{memberToken}}
+
+
+### Change Member Role
+PATCH {{baseUrl}}/organizers/{{organizerId}}/members/{{memberId}}/role
+Authorization: Bearer {{ownerToken}}
+Content-Type: application/json
+
+{
+  "role": "MANAGER"
+}
+
+
+### Remove Member
+DELETE {{baseUrl}}/organizers/{{organizerId}}/members/{{memberId}}
+Authorization: Bearer {{ownerToken}}
+
+
+### Get All Members
+GET {{baseUrl}}/organizers/{{organizerId}}/members/all
+Authorization: Bearer {{ownerToken}}

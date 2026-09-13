@@ -1,40 +1,69 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { CreateEventDto } from './dto/events.dto.js';
 import { EventStatus } from '../generated/prisma/enums.js';
+import { CreateEventDto } from './dto/createEvent.dto.js';
 
 @Injectable()
 export class EventsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateEventDto) {
-    const slug =
-      dto.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)+/g, '') +
-      '-' +
-      Date.now();
+  // async create(dto: CreateEventDto) {
+  //   const slug =
+  //     dto.title
+  //       .toLowerCase()
+  //       .replace(/[^a-z0-9]+/g, '-')
+  //       .replace(/(^-|-$)+/g, '') +
+  //     '-' +
+  //     Date.now();
+
+  //   return this.prisma.event.create({
+  //     data: {
+  //       organizerId: dto.organizerId,
+  //       categoryId: dto.categoryId,
+  //       title: dto.title,
+  //       slug,
+  //       description: dto.description,
+  //       eventType: dto.eventType,
+  //       startAt: new Date(dto.startAt),
+  //       endAt: new Date(dto.endAt),
+  //       timezone: dto.timezone,
+  //       status: EventStatus.DRAFT,
+  //       ...(dto.location && {
+  //         location: {
+  //           create: dto.location,
+  //         },
+  //       }),
+  //     },
+  //     include: { location: true, category: true },
+  //   });
+  // }
+
+  async createEvent(createEventDto: CreateEventDto) {
+    const { categoryId, organizerId, startAt, endAt, ...data } = createEventDto;
 
     return this.prisma.event.create({
       data: {
-        organizerId: dto.organizerId,
-        categoryId: dto.categoryId,
-        title: dto.title,
-        slug,
-        description: dto.description,
-        eventType: dto.eventType,
-        startAt: new Date(dto.startAt),
-        endAt: new Date(dto.endAt),
-        timezone: dto.timezone,
-        status: EventStatus.DRAFT,
-        ...(dto.location && {
-          location: {
-            create: dto.location,
+        ...data,
+
+        startAt: new Date(startAt),
+        endAt: new Date(endAt),
+
+        category: {
+          connect: {
+            id: categoryId,
           },
-        }),
+        },
+        organizer: {
+          connect: {
+            id: organizerId,
+          },
+        },
       },
-      include: { location: true, category: true },
+
+      include: {
+        category: true,
+        organizer: true,
+      },
     });
   }
 

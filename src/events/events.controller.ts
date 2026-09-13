@@ -8,18 +8,18 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { EventsService } from './events.service.js';
-import { CreateEventDto } from './dto/events.dto.js';
+import { CreateEventDto } from './dto/createEvent.dto.js';
 
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
-  @Post()
+  @Post('create')
   create(@Body() dto: CreateEventDto) {
-    return this.eventsService.create(dto);
+    return this.eventsService.createEvent(dto);
   }
 
-  @Get()
+  @Get('getAll')
   findAll() {
     return this.eventsService.findAllPublished();
   }

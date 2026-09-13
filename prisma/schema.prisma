@@ -52,6 +52,7 @@ enum OrganizerMemberStatus {
   INVITED
   SUSPENDED
   REMOVED
+  REJECTED
 }
 
 enum EventType {

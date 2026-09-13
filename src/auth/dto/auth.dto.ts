@@ -6,10 +6,15 @@ import {
   MinLength,
 } from 'class-validator';
 
+export class VerifyPinDto {
+  userId: string;
+  pin: string;
+}
+
 export class DeviceDataDto {
   @IsString()
-  @IsNotEmpty()
-  deviceId: string;
+  @IsOptional()
+  deviceId?: string;
 
   @IsOptional()
   @IsString()

@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -116,6 +117,7 @@ export class AuthService {
         this.redis.set(`verify-pin:${user.id}`, hashedPin, 'EX', 300),
         this.redis.set(`verify-pin-attempt:${user.id}`, '0', 'EX', 300),
       ]);
+      console.log(pin);
 
       await this.mailService.sendEmail(
         user.email,
@@ -160,6 +162,7 @@ export class AuthService {
 
   async verifyPinEmail(userId: string, pin: string) {
     const storedHash = await this.redis.get(`verify-pin:${userId}`);
+
     if (!storedHash) {
       throw new BadRequestException(
         'Kode verifikasi telah kadaluwarsa atau tidak valid',
@@ -393,6 +396,28 @@ export class AuthService {
       },
       ...tokens,
     };
+  }
+
+  async getMe(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        phone: true,
+        avatarUrl: true,
+        emailVerifiedAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 
   async refresh(refreshToken: string) {

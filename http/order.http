@@ -1,0 +1,46 @@
+@baseUrl = http://localhost:3000
+@token = YOUR_ACCESS_TOKEN
+
+@eventId = YOUR_EVENT_ID
+@orderId = YOUR_ORDER_ID
+@orderNumber = YOUR_ORDER_NUMBER
+
+
+### =====================================================
+### CREATE ORDER
+### =====================================================
+
+POST {{baseUrl}}/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "eventId": "{{eventId}}",
+  "items": [
+    {
+      "ticketTypeId": "YOUR_TICKET_TYPE_ID",
+      "quantity": 2,
+      "attendees": [
+        {
+          "fullName": "Lalu Ferdian",
+          "email": "ferdian@example.com",
+          "phone": "081234567890",
+          "registrationData": {
+            "company": "Hobitix",
+            "age": 25
+          }
+        },
+        {
+          "fullName": "John Doe",
+          "email": "john@example.com",
+          "phone": "081234567891",
+          "registrationData": {
+            "company": "Example",
+            "age": 26
+          }
+        }
+      ]
+    }
+  ],
+  "currency": "IDR"
+}

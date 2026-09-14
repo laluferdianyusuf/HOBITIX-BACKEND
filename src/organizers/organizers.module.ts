@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '../prisma/prisma.module.js';
-import { OrganizersController } from './organizers.controller.js';
-import { OrganizersService } from './organizers.service.js';
-import { PassportModule } from '@nestjs/passport';
+import { AdminGuard } from '../common/guards/admin.guard.js';
+import { OrganizerOwnerGuard } from '../common/guards/organizer-owner.guard.js';
+import { OrganizerController } from './organizers.controller.js';
+import { OrganizerService } from './organizers.service.js';
+
 @Module({
-  imports: [PrismaModule, PassportModule.register({ defaultStrategy: 'jwt' })],
-  controllers: [OrganizersController],
-  providers: [OrganizersService],
-  exports: [OrganizersService],
+  controllers: [OrganizerController],
+
+  providers: [OrganizerService, OrganizerOwnerGuard, AdminGuard],
+
+  exports: [OrganizerService],
 })
-export class OrganizersModule {}
+export class OrganizerModule {}

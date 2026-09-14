@@ -1,0 +1,88 @@
+@baseUrl = http://localhost:2987/api
+@userToken = YOUR_USER_JWT_TOKEN
+@adminToken = YOUR_ADMIN_JWT_TOKEN
+@organizerId = YOUR_ORGANIZER_UUID
+
+
+### Create Organizer
+POST {{baseUrl}}/organizers
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "name": "Hobitix Event",
+  "type": "COMPANY",
+  "description": "Event organizer untuk berbagai event di Hobitix",
+  "email": "event@hobitix.com",
+  "phone": "081234567890",
+  "websiteUrl": "https://hobitix.com",
+  "settlementSchedule": "AFTER_EVENT",
+  "settlementDelayDays": 3
+}
+
+### Get My Organizer
+GET {{baseUrl}}/organizers/me
+Authorization: Bearer {{userToken}}
+
+### Get Organizer By ID
+GET {{baseUrl}}/organizers/{{organizerId}}
+Authorization: Bearer {{userToken}}
+
+### Get Pending Organizers
+GET {{baseUrl}}/organizers/admin/pending
+Authorization: Bearer {{adminToken}}
+
+### Approve Organizer
+PATCH {{baseUrl}}/organizers/{{organizerId}}/review
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "approved": true
+}
+
+### Get My Organizer
+GET {{baseUrl}}/organizers/me
+Authorization: Bearer {{userToken}}
+
+### Reject Organizer
+PATCH {{baseUrl}}/organizers/{{organizerId}}/review
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "approved": false
+}
+
+### Update Organizer
+PATCH {{baseUrl}}/organizers/{{organizerId}}
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "name": "Hobitix Event Indonesia",
+  "description": "Event organizer resmi untuk berbagai event di Indonesia",
+  "phone": "081298765432",
+  "websiteUrl": "https://hobitix.com"
+}
+
+### Resubmit Organizer
+POST {{baseUrl}}/organizers/{{organizerId}}/resubmit
+Authorization: Bearer {{userToken}}
+
+### Get Pending Organizers
+GET {{baseUrl}}/organizers/admin/pending
+Authorization: Bearer {{adminToken}}
+
+### Approve Resubmitted Organizer
+PATCH {{baseUrl}}/organizers/{{organizerId}}/review
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "approved": true
+}
+
+### Get My Organizer
+GET {{baseUrl}}/organizers/me
+Authorization: Bearer {{userToken}}

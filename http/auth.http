@@ -1,0 +1,140 @@
+@baseUrl = http://localhost:2987/api
+
+
+### 1. REGISTER USER
+# @name registerUser
+
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Lalu Ferdian Yusuf",
+  "email": "laluferdi15@gmail.com",
+  "phone": "081234567891",
+  "password": "Ferdi123!"
+}
+
+### GET USER ID FROM REGISTER RESPONSE
+@userId = {{registerUser.response.body.data.userId}}
+
+### 2. VERIFY EMAIL
+POST {{baseUrl}}/auth/verify-email
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "pin": "269408"
+}
+
+
+### 3. LOGIN
+# @name loginUser
+
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "laluferdi15@gmail.com",
+  "password": "Ferdi123!",
+  "deviceData": {
+    "deviceId": "device-uuid-1234",
+    "deviceName": "Chrome Browser",
+    "platform": "WEB",
+    "expoToken": "ExponentPushToken[xxxxxx]"
+  }
+}
+
+### GET TOKENS
+@accessToken = {{loginUser.response.body.accessToken}}
+@refreshToken = {{loginUser.response.body.refreshToken}}
+
+### 4. GET CURRENT USER
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
+
+
+### 5. REFRESH TOKEN
+# @name refreshTokenRequest
+
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### GET NEW TOKENS AFTER REFRESH
+@newAccessToken = {{refreshTokenRequest.response.body.accessToken}}
+@newRefreshToken = {{refreshTokenRequest.response.body.refreshToken}}
+
+
+### 6. GET CURRENT USER WITH NEW ACCESS TOKEN
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{newAccessToken}}
+
+### 7. UPDATE CURRENT USER
+PATCH {{baseUrl}}/auth/me
+Authorization: Bearer {{newAccessToken}}
+Content-Type: application/json
+
+{
+  "fullName": "Lalu Ferdian Yusuf Updated",
+  "phone": "081234567892"
+}
+
+### 8. CHANGE PASSWORD
+PATCH {{baseUrl}}/auth/change-password
+Authorization: Bearer {{newAccessToken}}
+Content-Type: application/json
+
+{
+  "oldPassword": "Ferdi123!",
+  "newPassword": "Ferdi456!"
+}
+
+### 9. FORGOT PASSWORD
+# @name forgotPassword
+
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "laluferdi15@gmail.com"
+}
+
+### 10. VERIFY FORGOT PASSWORD PIN
+# @name verifyForgotPassword
+
+POST {{baseUrl}}/auth/verify-forgot-password-pin
+Content-Type: application/json
+
+{
+  "email": "laluferdi15@gmail.com",
+  "pin": "628761"
+}
+
+### GET RESET TOKEN
+@resetToken = {{verifyForgotPassword.response.body.resetToken}}
+
+### 11. RESET PASSWORD
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "resetToken": "{{resetToken}}",
+  "newPassword": "NewPassword123!"
+}
+
+
+### 12. RESEND EMAIL VERIFICATION
+POST {{baseUrl}}/auth/resend-verification
+Content-Type: application/json
+
+{
+  "email": "laluferdi15@gmail.com"
+}
+
+
+### 13. DELETE CURRENT USER
+DELETE {{baseUrl}}/auth/me
+Authorization: Bearer {{newAccessToken}}
